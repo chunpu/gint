@@ -1,7 +1,9 @@
 var fs = require('fs')
 
+// https://github.com/git/git/blob/master/Documentation/technical/index-format.txt
+
 var readIndex = 0
-fs.readFile('gittest/.git/index', function(err, buf) {
+fs.readFile('/root/gittest/.git/index', function(err, buf) {
   var dirc = read(4)
   check(dirc.toString('ascii'), 'DIRC', 'not a git index file')
   var o = {}
@@ -29,13 +31,16 @@ fs.readFile('gittest/.git/index', function(err, buf) {
     f.gid = read(4)
     f.size = read(4)
     f.sha1 = read(20) // it is the sha1..
+
     // include 1 bit flag, 1 bit extended, 2 bits stage, 12 bit name
     f.flag = read(2)
+    var namelen = getNameLen(f.flag)
+
     f.filename = read(5).toString() // don't know y`
     o.files.push(f)
   }
   
-  console.log(o)
+  //console.log(o)
 
   // ------method
   function read(n) {
@@ -43,6 +48,11 @@ fs.readFile('gittest/.git/index', function(err, buf) {
     return buf.slice(readIndex - n, readIndex)
   }
 })
+
+function getNameLen(buf) {
+  // 12 bit is namelen
+  console.log(buf)
+}
 
 function check(raw, expect, errinfo) {
   if (raw != expect) {

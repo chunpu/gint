@@ -3,7 +3,7 @@ var fs = require('fs')
 // https://github.com/git/git/blob/master/Documentation/technical/index-format.txt
 
 var readIndex = 0
-fs.readFile('/root/gittest/.git/index', function(err, buf) {
+fs.readFile(__dirname + '/.git/index', function(err, buf) {
   var dirc = read(4)
   check(dirc.toString('ascii'), 'DIRC', 'not a git index file')
   var o = {}
@@ -35,16 +35,30 @@ fs.readFile('/root/gittest/.git/index', function(err, buf) {
     // include 1 bit flag, 1 bit extended, 2 bits stage, 12 bit name
     f.flag = read(2)
     var namelen = getNameLen(f.flag)
+    f.filename = read(namelen).toString()
 
-    f.filename = read(5).toString() // don't know y`
+    // padding is always 00, for duiqi
+    f.padlen = 8 - (namelen + 62) % 8 || 8
+    read(f.padlen)
+
     o.files.push(f)
   }
   
-  //console.log(o)
+  console.log(o)
+  console.log(buf.length - readIndex)
+
+  function check(n) {
+    n = n || 1
+    return buf.slice(readIndex, readIndex + n)
+  }
 
   // ------method
   function read(n) {
     readIndex += n
+    if (readIndex > buf.length) {
+      
+      console.log(readIndex, buf.length)
+    }
     return buf.slice(readIndex - n, readIndex)
   }
 })
@@ -52,6 +66,7 @@ fs.readFile('/root/gittest/.git/index', function(err, buf) {
 function getNameLen(buf) {
   // 12 bit is namelen
   console.log(buf)
+  return buf[1]
 }
 
 function check(raw, expect, errinfo) {

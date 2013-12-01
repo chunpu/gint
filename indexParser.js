@@ -45,7 +45,6 @@ fs.readFile(__dirname + '/.git/index', function(err, buf) {
   }
   
   console.log(o)
-  console.log(buf.length - readIndex)
 
   function check(n) {
     n = n || 1
@@ -65,7 +64,6 @@ fs.readFile(__dirname + '/.git/index', function(err, buf) {
 
 function getNameLen(buf) {
   // 12 bit is namelen
-  console.log(buf)
   return buf[1]
 }
 

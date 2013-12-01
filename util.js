@@ -25,9 +25,9 @@ exports.saveObject = function(type, str, cb) {
   var hash = this.sha1(str2hash)
   var path = _git + '/objects/' + hash.substr(0, 2) + '/' + hash.substr(2)
   zlib.deflate(str2hash, function(err, content) {
-    fs.writeFileSync('./path', path)
-    fs.writeFileSync('./content', content)
-    // fse.outputFile(path, content, cb)
+    //fs.writeFileSync('./path', path)
+    //fs.writeFileSync('./content', content)
+    fse.outputFile(path, content, cb)
 
   })
 }

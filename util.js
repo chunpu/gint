@@ -47,13 +47,7 @@ exports.sha1 = function(str) {
 }
 
 exports.inflate = function(buf, cb) {
-  zlib.inflate(buf, function(err, buf) {
-    if (err) {
-      cb && cb(err)
-    } else {
-      cb && cb(undefined, buf+'')
-    }
-  })
+  zlib.inflate(buf, cb)
 }
 
 

@@ -1,5 +1,6 @@
 var util = require('./util.js')
 var fs = require('fs')
+var tree = require('./lib/tree.js')
 
 util.getHEAD(function(err, str) {
   
@@ -11,8 +12,14 @@ util.getHEAD(function(err, str) {
   })
 })
 
-util.getObject('01241a150e892c5ea165a1ba1a555d07ec1d843b', function(err, buf) {
-  console.log(buf + '')
+util.getObject('4f407b8ad5b70bab92c11a65926593f52f1942d0', function(err, buf) {
+  util.inflate(buf, function(err, buf2) {
+    tree.read(buf2)
+    //console.log(buf2+'')
+    //var arr = (buf2 + '').split('\0')
+    //console.log(arr)
+  })
+  //console.log(buf + '', '\n')
 })
 
 fs.readFile('./gin', function(err, buf) {
